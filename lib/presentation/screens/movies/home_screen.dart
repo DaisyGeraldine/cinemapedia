@@ -43,25 +43,59 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
     final slidesShowMovies = ref.watch(moviesSlideshowProvider);
 
-    return Column(
-      children: [
-        CustomAppbar(),
-
-        MoviesSlideshow(
-          movies: slidesShowMovies,
+    return CustomScrollView(
+      slivers: [
+        const SliverAppBar(
+          floating: true,
+          flexibleSpace: FlexibleSpaceBar(
+            title: CustomAppbar(),
+          ),
         ),
 
-        MovieHorizontalListview(
-          movies: nowPlayingMovies,
-          title: 'En Cartelera',
-          subtitle: 'Lunes 30',
-          loadNextPage: () {
-            
-            ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
-          }
-          //loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+        SliverList(
+          delegate: 
+            SliverChildBuilderDelegate(
+               (context, index) {
+                // final movie = nowPlayingMovies[index];
+                // return MoviePoster(movie: movie);
+                return Column(
+                  children: [
+                    //CustomAppbar(),
+              
+                    MoviesSlideshow(
+                      movies: slidesShowMovies,
+                    ),
+              
+                    MovieHorizontalListview(
+                      movies: nowPlayingMovies,
+                      title: 'En Cartelera',
+                      subtitle: 'Lunes 30',
+                      loadNextPage: () {
+                        
+                        ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+                      }
+                      //loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+                    ),
+              
+                    MovieHorizontalListview(
+                      movies: nowPlayingMovies,
+                      title: 'Proximanente',
+                      //subtitle: 'Lunes 30',
+                      loadNextPage: () {
+                        
+                        ref.read(nowPlayingMoviesProvider.notifier).loadNextPage();
+                      }
+                      //loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),
+                    ),
+              
+                  ],
+                );
+               },
+              childCount: nowPlayingMovies.length,
+              
+            ),
+        
         ),
-
       ],
     );
   }
